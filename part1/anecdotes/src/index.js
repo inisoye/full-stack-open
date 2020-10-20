@@ -29,7 +29,6 @@ const App = ({ anecdotes }) => {
       </div>
       <div>
         <h2>Anecdote with most votes</h2>
-
         <p>
           {/* display 'no votes' if there  have been no votes. highest vote is 0 in the no vote state */}
           {highestVote
