@@ -57,8 +57,6 @@ const App = () => {
 
     const trimmedName = trimString(eachPerson.name);
     const trimmedInput = trimString(searchValue);
-
-    // If search field is not empty and has a value that matches a name
     return trimmedName.includes(trimmedInput);
   });
 
