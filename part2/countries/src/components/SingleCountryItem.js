@@ -4,7 +4,7 @@ const SingleCountryItem = ({ eachCountry, handleClick }) => {
   return (
     <div>
       <span>{eachCountry.name} </span>
-      <button id={eachCountry.name} onClick={handleClick}>
+      <button data-name={eachCountry.name} onClick={handleClick}>
         show
       </button>
     </div>

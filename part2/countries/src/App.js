@@ -26,16 +26,17 @@ const App = () => {
   };
 
   const searchedCountries = countries.filter((eachCountry) => {
-    let trimmedInput = trimString(searchValue);
-    let trimmedCountryName = trimString(eachCountry.name);
+    const trimmedInput = trimString(searchValue);
+    const trimmedCountryName = trimString(eachCountry.name);
     return trimmedCountryName.includes(trimmedInput);
   });
 
   const handleClick = (event) => {
     setCountryViewState(!countryViewState);
-    let clickedCountry = searchedCountries.filter((eachCountry) => {
-      return eachCountry.name === event.target.id;
-    });
+    const clickedCountryName = event.target.getAttribute('data-name');
+    const clickedCountry = searchedCountries.filter(
+      (eachCountry) => eachCountry.name === clickedCountryName
+    );
     setClickedCountry(clickedCountry);
   };
 
