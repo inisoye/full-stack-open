@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import Filter from './components/Filter';
+import Notification from './components/Notification';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 
@@ -11,6 +12,8 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchValue, setSearchValue] = useState('');
+  const [notificationMessage, setNotificationMessage] = useState(null);
+  const [notificationType, setNotificationType] = useState('confirmation');
 
   useEffect(() => {
     personsHttpServices
@@ -47,16 +50,31 @@ const App = () => {
       if (numberReplacementConfirmed) {
         personsHttpServices
           .update(id, changedPerson)
-          .then((returnedPerson) =>
+          .then((returnedPerson) => {
             setPersons(
               persons.map((eachPerson) =>
                 trimString(eachPerson.name) !== trimString(newName)
                   ? eachPerson
                   : returnedPerson
               )
-            )
-          );
+            );
+            // Display message for a limited time
+            setNotificationMessage(
+              `${newName}'s number has now been replaced.`
+            );
+            setNotificationType('confirmation');
+          })
+          .catch((error) => {
+            setNotificationMessage(
+              `Information of ${newName} has already been removed from server.`
+            );
+            setNotificationType('error');
+          });
       }
+
+      setTimeout(() => {
+        setNotificationMessage(null);
+      }, 5000);
 
       setNewName('');
       setNewNumber('');
@@ -71,6 +89,13 @@ const App = () => {
         return setPersons(persons.concat(returnedPersons));
       });
 
+      // Display message for a limited time
+      setNotificationMessage(`Added ${newName}`);
+      setNotificationType('confirmation');
+      setTimeout(() => {
+        setNotificationMessage(null);
+      }, 5000);
+
       setNewName('');
       setNewNumber('');
     }
@@ -83,10 +108,22 @@ const App = () => {
     const deletionConfirmed = window.confirm(`Delete ${name}?`);
 
     if (deletionConfirmed) {
-      personsHttpServices.del(id).then(() => {
-        setPersons(persons.filter((eachPerson) => eachPerson.id !== id));
-      });
+      personsHttpServices
+        .del(id)
+        .then(() => {
+          setPersons(persons.filter((eachPerson) => eachPerson.id !== id));
+        })
+        .catch((error) => {
+          setNotificationMessage(
+            `It appears that this person's info has already been removed from server. Refresh the page to confirm.`
+          );
+          setNotificationType('error');
+        });
     }
+
+    setTimeout(() => {
+      setNotificationMessage(null);
+    }, 3000);
   };
 
   const searchedPersons = persons.filter((eachPerson) => {
@@ -99,6 +136,7 @@ const App = () => {
     <div>
       <div>
         <h2>Phonebook</h2>
+        <Notification type={notificationType} message={notificationMessage} />
         <Filter handleSearch={handleSearch} />
       </div>
 
