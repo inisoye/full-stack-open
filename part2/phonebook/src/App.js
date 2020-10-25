@@ -114,6 +114,8 @@ const App = () => {
           setPersons(persons.filter((eachPerson) => eachPerson.id !== id));
         })
         .catch((error) => {
+          /* This one size fits all message isn't always right. 
+          It displays, for example, if the server is offline.*/
           setNotificationMessage(
             `It appears that this person's info has already been removed from server. Refresh the page to confirm.`
           );
