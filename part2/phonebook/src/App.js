@@ -85,8 +85,11 @@ const App = () => {
         id: persons.length + 1,
       };
 
+      console.log(newPersonObject);
+
       personsHttpServices.add(newPersonObject).then((returnedPersons) => {
-        return setPersons(persons.concat(returnedPersons));
+        console.log(returnedPersons);
+        return setPersons(returnedPersons);
       });
 
       // Display message for a limited time
