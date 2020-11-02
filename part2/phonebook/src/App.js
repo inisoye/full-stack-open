@@ -85,11 +85,8 @@ const App = () => {
         id: persons.length + 1,
       };
 
-      console.log(newPersonObject);
-
       personsHttpServices.add(newPersonObject).then((returnedPersons) => {
-        console.log(returnedPersons);
-        return setPersons(returnedPersons);
+        return setPersons(persons.concat(returnedPersons));
       });
 
       // Display message for a limited time
@@ -118,7 +115,7 @@ const App = () => {
         })
         .catch((error) => {
           /* This one size fits all message isn't always right. 
-          It displays, for example, if the server is offline.*/
+          It still displays, for example, if the server is offline.*/
           setNotificationMessage(
             `It appears that this person's info has already been removed from server. Refresh the page to confirm.`
           );
