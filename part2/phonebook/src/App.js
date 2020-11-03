@@ -65,8 +65,9 @@ const App = () => {
             setNotificationType('confirmation');
           })
           .catch((error) => {
+            console.log(error.response.data);
             setNotificationMessage(
-              `Information of ${newName} has already been removed from server.`
+              `There was an error in updating ${newName}'s number`
             );
             setNotificationType('error');
           });
@@ -82,16 +83,24 @@ const App = () => {
       const newPersonObject = {
         name: newName,
         number: newNumber,
-        id: persons.length + 1,
       };
 
-      personsHttpServices.add(newPersonObject).then((returnedPersons) => {
-        return setPersons(persons.concat(returnedPersons));
-      });
+      personsHttpServices
+        .add(newPersonObject)
+        .then((createdPerson) => {
+          // Display message for a limited time
+          setNotificationMessage(`Added ${newName}`);
+          setNotificationType('confirmation');
 
-      // Display message for a limited time
-      setNotificationMessage(`Added ${newName}`);
-      setNotificationType('confirmation');
+          setPersons(persons.concat(createdPerson));
+        })
+        .catch((error) => {
+          // access error message sent from the server
+          console.log(error.response.data);
+          setNotificationMessage(error.response.data.error);
+          setNotificationType('error');
+        });
+
       setTimeout(() => {
         setNotificationMessage(null);
       }, 5000);
@@ -103,7 +112,7 @@ const App = () => {
 
   const deletePerson = (event) => {
     const name = event.target.getAttribute('data-name');
-    const id = parseInt(event.target.getAttribute('data-id'));
+    const id = event.target.getAttribute('data-id');
 
     const deletionConfirmed = window.confirm(`Delete ${name}?`);
 
