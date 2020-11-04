@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Shall we begin this today?",
+    "author": "Shoobs Toure",
+    "url": "malian.ml",
+    "likes": 9
+}
