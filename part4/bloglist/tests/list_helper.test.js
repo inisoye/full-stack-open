@@ -148,5 +148,3 @@ describe('most likes', () => {
     expect(listHelper.mostLikes([])).toBe(0);
   });
 });
-
-// mostLikes(allBlogs);

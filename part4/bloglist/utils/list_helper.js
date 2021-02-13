@@ -15,7 +15,7 @@ const totalLikes = (blogs) => {
 const favoriteBlog = (blogs) => {
   const fullFavoriteBlog = blogs.reduce((prev, curr) => {
     return prev.likes > curr.likes ? prev : curr
-  }, {})
+  }, 0)
 
   // return zero if bloglist is empty
   return blogs.length === 0
