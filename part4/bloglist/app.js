@@ -1,17 +1,19 @@
 const config = require('./utils/config');
 const express = require('express');
 const app = express();
+require('express-async-errors');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const logger = require('./utils/logger');
 const middleware = require('./utils/middleware');
 const blogsRouter = require('./controllers/blogs');
 
-const mongoUrl = config.MONGO_URI;
+const mongoURI = config.MONGO_URI;
 
-logger.info('connecting to', mongoUrl);
+logger.info('connecting to', mongoURI);
+
 mongoose
-  .connect(mongoUrl, {
+  .connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
