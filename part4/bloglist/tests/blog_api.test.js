@@ -1,38 +1,22 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
+const helper = require('./test_helper');
 const api = supertest(app);
 
 const Blog = require('../models/blog');
 
-const initialBlogs = [
-  {
-    title: 'What shall we do now?',
-    author: 'Fimibayo Beunaon',
-    url: 'anything.com',
-    likes: 14,
-    id: '6024ce4a2994ce2218bc1b2d',
-  },
-  {
-    title: 'Will this one work?',
-    author: 'Shagbanala Loriro',
-    url: 'firaz.com',
-    likes: 3,
-    id: '6026fbd25b71ed23f7245329',
-  },
-];
-
 beforeEach(async () => {
   await Blog.deleteMany({});
 
-  let blogObject = new Blog(initialBlogs[0]);
+  let blogObject = new Blog(helper.initialBlogs[0]);
   await blogObject.save();
 
-  blogObject = new Blog(initialBlogs[1]);
+  blogObject = new Blog(helper.initialBlogs[1]);
   await blogObject.save();
 });
 
-// Increase timeout from 5s to 30s to prevent tests from failing
+// Increase timeout from 5s to 30s to prevent tests from failing due to poor connection
 jest.setTimeout(30000);
 
 describe('when there are some initially saved blog posts', () => {
@@ -46,7 +30,7 @@ describe('when there are some initially saved blog posts', () => {
   test('all blogs are returned', async () => {
     const response = await api.get('/api/blogs');
 
-    expect(response.body).toHaveLength(initialBlogs.length);
+    expect(response.body).toHaveLength(helper.initialBlogs.length);
   });
 
   test('a specific blog is within the returned blogs', async () => {
@@ -64,27 +48,9 @@ describe('when there are some initially saved blog posts', () => {
   });
 });
 
-const blogsInDb = async () => {
-  const blogs = await Blog.find({});
-  return blogs.map((blog) => blog.toJSON());
-};
-
-const nonExistingId = async () => {
-  const blog = new Blog({
-    title: 'willremovethissoon',
-    author: 'remove person',
-    url: 'removed.link',
-    likes: 0,
-  });
-  await blog.save();
-  await blog.remove();
-
-  return blog._id.toString();
-};
-
 describe('when viewing a single blog post', () => {
   test('single blog post can be viewed with a valid id', async () => {
-    const blogsAtStart = await blogsInDb();
+    const blogsAtStart = await helper.blogsInDb();
 
     const blogToView = blogsAtStart[0];
 
@@ -99,7 +65,7 @@ describe('when viewing a single blog post', () => {
   });
 
   test('fails with statuscode 404 if blog post does not exist', async () => {
-    const validNonexistingId = await nonExistingId();
+    const validNonexistingId = await helper.nonExistingId();
 
     await api.get(`/api/blogs/${validNonexistingId}`).expect(404);
   });
@@ -127,8 +93,8 @@ describe('when adding a new blog post', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
-    const blogsAtEnd = await blogsInDb();
-    expect(blogsAtEnd).toHaveLength(initialBlogs.length + 1);
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
 
     const titles = blogsAtEnd.map((n) => n.title);
     expect(titles).toContain('This is a sample');
@@ -148,7 +114,7 @@ describe('when adding a new blog post', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
-    const blogsAtEnd = await blogsInDb();
+    const blogsAtEnd = await helper.blogsInDb();
     const lastAddedBlog = blogsAtEnd[blogsAtEnd.length - 1];
     expect(lastAddedBlog.likes).toEqual(0);
   });
@@ -161,21 +127,21 @@ describe('when adding a new blog post', () => {
 
     await api.post('/api/blogs').send(newBlogWithoutUrlAndTitle).expect(400);
 
-    const blogsAtEnd = await blogsInDb();
-    expect(blogsAtEnd).toHaveLength(initialBlogs.length);
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
   });
 });
 
 describe('when deleting a blog post', () => {
   test('a blog post can be deleted', async () => {
-    const blogsAtStart = await blogsInDb();
+    const blogsAtStart = await helper.blogsInDb();
     const blogPostToDelete = blogsAtStart[0];
 
     await api.delete(`/api/blogs/${blogPostToDelete.id}`).expect(204);
 
-    const blogsAtEnd = await blogsInDb();
+    const blogsAtEnd = await helper.blogsInDb();
 
-    expect(blogsAtEnd).toHaveLength(initialBlogs.length - 1);
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
 
     const ids = blogsAtEnd.map((blogPost) => blogPost.id);
 
@@ -185,7 +151,7 @@ describe('when deleting a blog post', () => {
 
 describe('when updating likes of a blog post', () => {
   test('updates can be successfully conducted', async () => {
-    const blogsAtStart = await blogsInDb();
+    const blogsAtStart = await helper.blogsInDb();
     const blogPostToUpdate = blogsAtStart[0];
 
     await api
@@ -193,11 +159,11 @@ describe('when updating likes of a blog post', () => {
       .send({ likes: 9 })
       .expect(200);
 
-    const blogsAtEnd = await blogsInDb();
+    const blogsAtEnd = await helper.blogsInDb();
 
     const updatedBlog = blogsAtEnd[0];
 
-    expect(blogsAtEnd).toHaveLength(initialBlogs.length);
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
 
     expect(updatedBlog.likes).toBe(9);
   });

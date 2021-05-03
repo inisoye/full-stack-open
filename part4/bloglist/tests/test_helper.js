@@ -1,42 +1,42 @@
-// const Blog = require('../models/blog');
+const Blog = require('../models/blog');
 
-// const initialBlogs = [
-//   {
-//     _id: '5a422a851b54a676234d17f7',
-//     title: 'React patterns',
-//     author: 'Michael Chan',
-//     url: 'https://reactpatterns.com/',
-//     likes: 7,
-//     __v: 0,
-//   },
-//   {
-//     _id: '5a422aa71b54a676234d17f8',
-//     title: 'Go To Statement Considered Harmful',
-//     author: 'Edsger W. Dijkstra',
-//     url:
-//       'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-//     likes: 5,
-//     __v: 0,
-//   },
-//   {
-//     _id: '5a422b3a1b54a676234d17f9',
-//     title: 'Canonical string reduction',
-//     author: 'Edsger W. Dijkstra',
-//     url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
-//     likes: 12,
-//     __v: 0,
-//   },
-// ];
+const initialBlogs = [
+  {
+    title: 'What shall we do now?',
+    author: 'Fimibayo Beunaon',
+    url: 'anything.com',
+    likes: 14,
+    id: '6024ce4a2994ce2218bc1b2d',
+  },
+  {
+    title: 'Will this one work?',
+    author: 'Shagbanala Loriro',
+    url: 'firaz.com',
+    likes: 3,
+    id: '6026fbd25b71ed23f7245329',
+  },
+];
 
-// const nonExistingId = async () => {
-//   const note = new Blog({
-//     title: 'willremovethissoon',
-//     author: 'removeauthorsoon',
-//     url: 'stuff.com',
-//     likes: 3,
-//   });
-//   await note.save();
-//   await note.remove();
+const blogsInDb = async () => {
+  const blogs = await Blog.find({});
+  return blogs.map((blog) => blog.toJSON());
+};
 
-//   return note._id.toString();
-// };
+const nonExistingId = async () => {
+  const blog = new Blog({
+    title: 'willremovethissoon',
+    author: 'remove person',
+    url: 'removed.link',
+    likes: 0,
+  });
+  await blog.save();
+  await blog.remove();
+
+  return blog._id.toString();
+};
+
+module.exports = {
+  initialBlogs,
+  nonExistingId,
+  blogsInDb,
+};
