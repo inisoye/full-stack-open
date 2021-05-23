@@ -1,9 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNhbXBsZS11c2VyIiwiaWQiOiI2MGFhMGE5MjM5OGQyZTc4MTUwMjVhZmUiLCJpYXQiOjE2MjE3NTY1Njh9.ugFBBblrtdlxT8joIXQl_YNgCZ4g6lOdbTKlUABkQKs
 
 {
-    "title": "This has no likes property",
-    "author": "Mumla Buumz",
+    "title": "Shall this one work?",
+    "author": "Let's see",
     "url": "jsds.it",
-    "likes": 3
+    "likes": 9
 }
