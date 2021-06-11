@@ -71,12 +71,10 @@ blogsRouter.put('/:id', async (request, response) => {
   });
 
   if (updatedBlog) {
-    response.json(updatedBlog.toJSON());
+    response.status(200).json(updatedBlog.toJSON());
   } else {
     response.status(404).end();
   }
-
-  response.json(updatedBlog);
 });
 
 module.exports = blogsRouter;
