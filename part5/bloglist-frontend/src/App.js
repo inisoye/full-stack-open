@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Blog from './components/Blog';
 import CreateBlogForm from './components/CreateBlogForm';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
+import Togglable from './components/Togglable';
 import blogService from './services/blogs';
 
 const App = () => {
@@ -10,6 +11,8 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [notificationMessage, setNotificationMessage] = useState(null);
   const [notificationType, setNotificationType] = useState('confirmation');
+
+  const blogFormRef = useRef();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -27,6 +30,14 @@ const App = () => {
   const logOut = () => {
     setUser(null);
     window.localStorage.removeItem('loggedBlogAppUser');
+  };
+
+  const toggleBlogFormVisibility = () => {
+    blogFormRef.current.toggleVisibility();
+  };
+
+  const orderLikesDescending = (a, b) => {
+    return a.likes > b.likes ? -1 : b.likes > a.likes ? 1 : 0;
   };
 
   return (
@@ -50,15 +61,25 @@ const App = () => {
             {user.name} logged in <button onClick={logOut}>log out</button>
           </p>
 
-          <CreateBlogForm
-            blogs={blogs}
-            setBlogs={setBlogs}
-            setNotificationMessage={setNotificationMessage}
-            setNotificationType={setNotificationType}
-          />
+          <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+            <CreateBlogForm
+              blogs={blogs}
+              setBlogs={setBlogs}
+              setNotificationMessage={setNotificationMessage}
+              setNotificationType={setNotificationType}
+              toggleBlogFormVisibility={toggleBlogFormVisibility}
+            />
+          </Togglable>
 
-          {blogs?.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+          {blogs?.sort(orderLikesDescending).map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              blogs={blogs}
+              setBlogs={setBlogs}
+              setNotificationMessage={setNotificationMessage}
+              setNotificationType={setNotificationType}
+            />
           ))}
         </div>
       )}

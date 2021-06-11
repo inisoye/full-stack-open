@@ -6,6 +6,7 @@ function CreateBlogForm({
   setBlogs,
   setNotificationMessage,
   setNotificationType,
+  toggleBlogFormVisibility,
 }) {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
@@ -25,6 +26,9 @@ function CreateBlogForm({
       .then((returnedBlog) => {
         setBlogs([...blogs, returnedBlog]);
 
+        // Close form only when addition is successful
+        toggleBlogFormVisibility();
+
         setTitle('');
         setAuthor('');
         setUrl('');
@@ -40,7 +44,7 @@ function CreateBlogForm({
       })
       .catch((error) => {
         console.log(error);
-        setNotificationMessage(`there was an error adding your entry`);
+        setNotificationMessage('there was an error adding your entry');
         setNotificationType('error');
 
         setTimeout(() => {

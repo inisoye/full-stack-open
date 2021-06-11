@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import loginService from '../services/login';
 
 function LoginForm({ setUser, setNotificationMessage, setNotificationType }) {
@@ -54,5 +55,11 @@ function LoginForm({ setUser, setNotificationMessage, setNotificationType }) {
     </form>
   );
 }
+
+LoginForm.propTypes = {
+  setUser: PropTypes.func.isRequired,
+  setNotificationMessage: PropTypes.func.isRequired,
+  setNotificationType: PropTypes.func.isRequired,
+};
 
 export default LoginForm;
