@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import blogService from '../services/blogs';
 
-const Blog = ({
-  blog,
-  blogs,
-  setBlogs,
-  setNotificationMessage,
-  setNotificationType,
-}) => {
+const Blog = ({ blog, blogs, setBlogs, likeBlog }) => {
   const [areDetailsOpen, setAreDetailsOpen] = useState(false);
 
   const blogStyle = {
@@ -20,27 +14,6 @@ const Blog = ({
 
   const detailsStyle = {
     display: areDetailsOpen ? 'block' : 'none',
-  };
-
-  const likeBlog = (id) => {
-    const blog = blogs.find((blog) => blog.id === id);
-    const updatedBlog = { ...blog, likes: blog.likes + 1 };
-
-    blogService
-      .update(id, updatedBlog)
-      .then(() =>
-        setBlogs(blogs.map((blog) => (blog.id !== id ? blog : updatedBlog)))
-      )
-      .catch(() => {
-        setNotificationMessage(
-          `${blog.title} has already been removed from the server`
-        );
-        setNotificationType('error');
-
-        setTimeout(() => {
-          setNotificationMessage(null);
-        }, 5000);
-      });
   };
 
   const deleteBlog = (id, title, author) => {
@@ -62,20 +35,29 @@ const Blog = ({
         <span> {blog.author} </span>
         <button
           type="button"
+          className="details-button"
           onClick={() => setAreDetailsOpen(!areDetailsOpen)}
         >
           {areDetailsOpen ? 'hide' : 'view'}
         </button>
       </p>
+
       <div style={detailsStyle}>
-        <p>{blog.url}</p>
-        <p>
+        <p className="url">{blog.url}</p>
+
+        <p className="likes">
           likes {blog.likes}{' '}
-          <button type="button" onClick={() => likeBlog(blog.id)}>
+          <button
+            type="button"
+            className="like-button"
+            onClick={() => likeBlog(blog.id)}
+          >
             like
           </button>
         </p>
+
         <p>{blog.user?.name}</p>
+
         {blog.user && (
           <button onClick={() => deleteBlog(blog.id, blog.title, blog.author)}>
             remove

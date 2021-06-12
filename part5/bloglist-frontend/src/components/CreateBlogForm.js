@@ -1,58 +1,37 @@
 import React, { useState } from 'react';
-import blogService from '../services/blogs';
 
-function CreateBlogForm({
-  blogs,
-  setBlogs,
-  setNotificationMessage,
-  setNotificationType,
-  toggleBlogFormVisibility,
-}) {
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
+function CreateBlogForm({ createBlog }) {
+  const [newTitle, setNewTitle] = useState('');
+  const [newAuthor, setNewAuthor] = useState('');
+  const [newUrl, setNewUrl] = useState('');
+
+  const handleTitleChange = ({ target }) => {
+    setNewTitle(target.value);
+  };
+
+  const handleAuthorChange = ({ target }) => {
+    setNewAuthor(target.value);
+  };
+
+  const handleUrlChange = ({ target }) => {
+    setNewUrl(target.value);
+  };
 
   const addBlog = (event) => {
     event.preventDefault();
 
     const newBlog = {
-      title: title,
-      author: author,
-      url: url,
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl,
     };
 
-    blogService
-      .create(newBlog)
-      .then((returnedBlog) => {
-        setBlogs([...blogs, returnedBlog]);
+    createBlog(newBlog);
 
-        // Close form only when addition is successful
-        toggleBlogFormVisibility();
-
-        setTitle('');
-        setAuthor('');
-        setUrl('');
-
-        setNotificationMessage(
-          `a new blog ${returnedBlog.title} by ${returnedBlog.author} has been added!`
-        );
-        setNotificationType('confirmation');
-
-        setTimeout(() => {
-          setNotificationMessage(null);
-        }, 5000);
-      })
-      .catch((error) => {
-        console.log(error);
-        setNotificationMessage('there was an error adding your entry');
-        setNotificationType('error');
-
-        setTimeout(() => {
-          setNotificationMessage(null);
-        }, 5000);
-      });
+    setNewTitle('');
+    setNewAuthor('');
+    setNewUrl('');
   };
-
   return (
     <form onSubmit={addBlog}>
       <h2>create new</h2>
@@ -62,8 +41,9 @@ function CreateBlogForm({
         <input
           type="text"
           name="title"
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
+          id="title"
+          value={newTitle}
+          onChange={handleTitleChange}
         />
       </label>
 
@@ -74,8 +54,9 @@ function CreateBlogForm({
         <input
           type="text"
           name="author"
-          value={author}
-          onChange={({ target }) => setAuthor(target.value)}
+          id="author"
+          value={newAuthor}
+          onChange={handleAuthorChange}
         />
       </label>
 
@@ -86,8 +67,9 @@ function CreateBlogForm({
         <input
           type="text"
           name="text"
-          value={url}
-          onChange={({ target }) => setUrl(target.value)}
+          id="text"
+          value={newUrl}
+          onChange={handleUrlChange}
         />
       </label>
 

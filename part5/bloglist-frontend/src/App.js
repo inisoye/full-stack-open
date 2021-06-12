@@ -40,6 +40,56 @@ const App = () => {
     return a.likes > b.likes ? -1 : b.likes > a.likes ? 1 : 0;
   };
 
+  const likeBlog = (id) => {
+    const blog = blogs.find((blog) => blog.id === id);
+    const updatedBlog = { ...blog, likes: blog.likes + 1 };
+
+    blogService
+      .update(id, updatedBlog)
+      .then(() =>
+        setBlogs(blogs.map((blog) => (blog.id !== id ? blog : updatedBlog)))
+      )
+      .catch(() => {
+        setNotificationMessage(
+          `${blog.title} has already been removed from the server`
+        );
+        setNotificationType('error');
+
+        setTimeout(() => {
+          setNotificationMessage(null);
+        }, 5000);
+      });
+  };
+
+  const addBlog = (newBlog) => {
+    blogService
+      .create(newBlog)
+      .then((returnedBlog) => {
+        setBlogs([...blogs, returnedBlog]);
+
+        // Close form only when addition is successful
+        toggleBlogFormVisibility();
+
+        setNotificationMessage(
+          `a new blog ${returnedBlog.title} by ${returnedBlog.author} has been added!`
+        );
+        setNotificationType('confirmation');
+
+        setTimeout(() => {
+          setNotificationMessage(null);
+        }, 5000);
+      })
+      .catch((error) => {
+        console.log(error);
+        setNotificationMessage('there was an error adding your entry');
+        setNotificationType('error');
+
+        setTimeout(() => {
+          setNotificationMessage(null);
+        }, 5000);
+      });
+  };
+
   return (
     <>
       <Notification message={notificationMessage} type={notificationType} />
@@ -68,6 +118,7 @@ const App = () => {
               setNotificationMessage={setNotificationMessage}
               setNotificationType={setNotificationType}
               toggleBlogFormVisibility={toggleBlogFormVisibility}
+              createBlog={addBlog}
             />
           </Togglable>
 
@@ -77,6 +128,7 @@ const App = () => {
               blog={blog}
               blogs={blogs}
               setBlogs={setBlogs}
+              likeBlog={likeBlog}
               setNotificationMessage={setNotificationMessage}
               setNotificationType={setNotificationType}
             />
