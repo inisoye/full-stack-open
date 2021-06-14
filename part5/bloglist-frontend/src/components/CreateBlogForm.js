@@ -66,8 +66,8 @@ function CreateBlogForm({ createBlog }) {
         url:
         <input
           type="text"
-          name="text"
-          id="text"
+          name="url"
+          id="url"
           value={newUrl}
           onChange={handleUrlChange}
         />
