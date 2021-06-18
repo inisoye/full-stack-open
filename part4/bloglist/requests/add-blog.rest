@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNhbXBsZS11c2VyIiwiaWQiOiI2MGFhMGE5MjM5OGQyZTc4MTUwMjVhZmUiLCJpYXQiOjE2MjE3NTY1Njh9.ugFBBblrtdlxT8joIXQl_YNgCZ4g6lOdbTKlUABkQKs
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNhbXBsZS11c2VyIiwiaWQiOiI2MGM3OTkwNDQ3YjUwZTk4MDFiMGUxYjYiLCJpYXQiOjE2MjM2OTM1NzJ9.sbR1H-PXsND8Vu6REBfSETVNVOV677ue3JNGBuE8cfo
 
 {
     "title": "Shall this one work?",
