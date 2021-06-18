@@ -53,7 +53,9 @@ function LoginForm({ setUser, setNotificationMessage, setNotificationType }) {
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">login</button>
+      <button type="submit" id="login-button">
+        login
+      </button>
     </form>
   );
 }

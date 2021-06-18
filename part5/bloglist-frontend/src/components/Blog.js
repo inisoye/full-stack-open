@@ -29,13 +29,14 @@ const Blog = ({ blog, blogs, setBlogs, likeBlog }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} data-cy="blog-container">
       <p>
         <span>{blog.title} </span>by
         <span> {blog.author} </span>
         <button
           type="button"
           className="details-button"
+          data-cy="details-button"
           onClick={() => setAreDetailsOpen(!areDetailsOpen)}
         >
           {areDetailsOpen ? 'hide' : 'view'}
@@ -46,10 +47,11 @@ const Blog = ({ blog, blogs, setBlogs, likeBlog }) => {
         <p className="url">{blog.url}</p>
 
         <p className="likes">
-          likes {blog.likes}{' '}
+          likes <span data-cy="likes">{blog.likes} </span>
           <button
             type="button"
             className="like-button"
+            data-cy="like-button"
             onClick={() => likeBlog(blog.id)}
           >
             like
