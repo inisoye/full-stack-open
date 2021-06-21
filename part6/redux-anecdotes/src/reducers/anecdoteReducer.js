@@ -51,7 +51,7 @@ const createAnecdote = (content) => {
 
     dispatch({
       type: 'NEW_ANECDOTE',
-      content: newAnecdote,
+      data: newAnecdote,
     });
   };
 };
