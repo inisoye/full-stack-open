@@ -33,10 +33,10 @@ const vote = (id) => {
   };
 };
 
-const createAnecdote = (content) => {
+const createAnecdote = (data) => {
   return {
     type: 'NEW_ANECDOTE',
-    data: { content, votes: 0 },
+    data,
   };
 };
 
