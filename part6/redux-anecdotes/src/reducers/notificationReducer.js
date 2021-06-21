@@ -4,10 +4,10 @@ const initialState = '';
 
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'SET_NOTIFICATION':
+    case 'SHOW_NOTIFICATION':
       return action.data;
 
-    case 'DELETE_NOTIFICATION':
+    case 'HIDE_NOTIFICATION':
       return initialState;
 
     default:
@@ -17,17 +17,27 @@ const notificationReducer = (state = initialState, action) => {
 
 // Action Creators
 
-const setNotification = (content) => {
+const showNotification = (content) => {
   return {
-    type: 'SET_NOTIFICATION',
+    type: 'SHOW_NOTIFICATION',
     data: content,
   };
 };
 
-const deleteNotification = () => {
+const hideNotification = () => {
   return {
-    type: 'DELETE_NOTIFICATION',
+    type: 'HIDE_NOTIFICATION',
   };
 };
 
-export { notificationReducer, setNotification, deleteNotification };
+const setNotification = (content, displayDuration) => {
+  return async (dispatch) => {
+    dispatch(showNotification(content));
+
+    setTimeout(() => {
+      dispatch(hideNotification());
+    }, displayDuration * 1000);
+  };
+};
+
+export { notificationReducer, setNotification };
