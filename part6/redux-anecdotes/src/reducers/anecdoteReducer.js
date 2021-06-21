@@ -28,10 +28,20 @@ const anecdoteReducer = (state = [], action) => {
 
 // Action Creators
 
-const vote = (id) => {
-  return {
-    type: 'VOTE_FOR_ANECDOTE',
-    data: { id },
+const vote = (anecdoteToChange) => {
+  return async (dispatch) => {
+    const changedAnecdote = {
+      ...anecdoteToChange,
+      votes: anecdoteToChange.votes + 1,
+    };
+
+    const returnedAnecdote = await anecdoteService.update(changedAnecdote);
+    const { id } = returnedAnecdote;
+
+    dispatch({
+      type: 'VOTE_FOR_ANECDOTE',
+      data: { id },
+    });
   };
 };
 
