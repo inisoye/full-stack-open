@@ -30,11 +30,15 @@ const hideNotification = () => {
   };
 };
 
+let timeoutID;
+
 const setNotification = (content, displayDuration) => {
   return async (dispatch) => {
+    window.clearTimeout(timeoutID);
+
     dispatch(showNotification(content));
 
-    setTimeout(() => {
+    timeoutID = window.setTimeout(() => {
       dispatch(hideNotification());
     }, displayDuration * 1000);
   };
