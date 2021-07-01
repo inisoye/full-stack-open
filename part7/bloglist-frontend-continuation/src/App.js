@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Blog from './components/Blog';
@@ -8,13 +8,13 @@ import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import blogService from './services/blogs';
 
+import { logout } from './reducers/loggedUserReducer';
 import { like, createBlog, initializeBlogs } from './reducers/blogReducer';
 
 const App = () => {
-  const [user, setUser] = useState(null);
-
   const notification = useSelector((state) => state.notification);
   const blogs = useSelector((state) => state.blogs);
+  const user = useSelector((state) => state.loggedUser);
 
   const dispatch = useDispatch();
 
@@ -26,15 +26,16 @@ const App = () => {
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser');
+
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
       blogService.setToken(user.token);
     }
   }, []);
 
   const logOut = () => {
-    setUser(null);
+    dispatch(logout());
+
     window.localStorage.removeItem('loggedBlogAppUser');
   };
 
@@ -52,8 +53,8 @@ const App = () => {
     dispatch(like(blogToChange));
   };
 
-  const addBlog = (newBlog) => {
-    dispatch(createBlog(newBlog));
+  const addBlog = async (newBlog) => {
+    await dispatch(createBlog(newBlog));
 
     // Close form only when addition is successful
     toggleBlogFormVisibility();
@@ -69,7 +70,7 @@ const App = () => {
       {user === null ? (
         <div>
           <h2>log in to application</h2>
-          <LoginForm setUser={setUser} />
+          <LoginForm />
         </div>
       ) : (
         <div>

@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 
-import loginService from '../services/login';
+import { login } from '../reducers/loggedUserReducer';
 import { setNotification } from '../reducers/notificationReducer';
 
-function LoginForm({ setUser }) {
+function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -16,14 +16,8 @@ function LoginForm({ setUser }) {
     console.log('logging in with', username, password);
 
     try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
+      await dispatch(login(username, password));
 
-      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user));
-
-      setUser(user);
       setUsername('');
       setPassword('');
     } catch (exception) {
