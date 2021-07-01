@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import blogService from '../services/blogs';
+import { useDispatch } from 'react-redux';
 
-const Blog = ({ blog, blogs, setBlogs, likeBlog }) => {
+import { del } from '../reducers/blogReducer';
+
+const Blog = ({ blog, likeBlog }) => {
   const [areDetailsOpen, setAreDetailsOpen] = useState(false);
+
+  const dispatch = useDispatch();
 
   const blogStyle = {
     paddingTop: 10,
@@ -22,9 +26,7 @@ const Blog = ({ blog, blogs, setBlogs, likeBlog }) => {
     );
 
     if (isDeletionConfirmed) {
-      blogService.del(id).then(() => {
-        setBlogs(blogs.filter((blog) => blog.id !== id));
-      });
+      dispatch(del(id));
     }
   };
 

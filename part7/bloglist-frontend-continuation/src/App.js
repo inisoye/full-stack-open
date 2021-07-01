@@ -8,20 +8,20 @@ import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import blogService from './services/blogs';
 
-import { setNotification } from './reducers/notificationReducer';
+import { like, createBlog, initializeBlogs } from './reducers/blogReducer';
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
 
   const notification = useSelector((state) => state.notification);
+  const blogs = useSelector((state) => state.blogs);
 
   const dispatch = useDispatch();
 
   const blogFormRef = useRef();
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    dispatch(initializeBlogs());
   }, []);
 
   useEffect(() => {
@@ -47,49 +47,16 @@ const App = () => {
   };
 
   const likeBlog = (id) => {
-    const blog = blogs.find((blog) => blog.id === id);
-    const updatedBlog = { ...blog, likes: blog.likes + 1 };
+    const blogToChange = blogs.find((blog) => blog.id === id);
 
-    blogService
-      .update(id, updatedBlog)
-      .then(() =>
-        setBlogs(blogs.map((blog) => (blog.id !== id ? blog : updatedBlog)))
-      )
-      .catch(() => {
-        dispatch(
-          setNotification(
-            `${blog.title} has already been removed from the server`,
-            'error',
-            3
-          )
-        );
-      });
+    dispatch(like(blogToChange));
   };
 
   const addBlog = (newBlog) => {
-    blogService
-      .create(newBlog)
-      .then((returnedBlog) => {
-        setBlogs([...blogs, returnedBlog]);
+    dispatch(createBlog(newBlog));
 
-        // Close form only when addition is successful
-        toggleBlogFormVisibility();
-
-        dispatch(
-          setNotification(
-            `a new blog ${returnedBlog.title} by ${returnedBlog.author} has been added!`,
-            'confirmation',
-            3
-          )
-        );
-      })
-      .catch((error) => {
-        console.log(error);
-
-        dispatch(
-          setNotification('there was an error adding your entry', 'error', 3)
-        );
-      });
+    // Close form only when addition is successful
+    toggleBlogFormVisibility();
   };
 
   return (
@@ -115,20 +82,13 @@ const App = () => {
           <Togglable buttonLabel="create new blog" ref={blogFormRef}>
             <CreateBlogForm
               blogs={blogs}
-              setBlogs={setBlogs}
               toggleBlogFormVisibility={toggleBlogFormVisibility}
               createBlog={addBlog}
             />
           </Togglable>
 
           {blogs?.sort(orderLikesDescending).map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              blogs={blogs}
-              setBlogs={setBlogs}
-              likeBlog={likeBlog}
-            />
+            <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
           ))}
         </div>
       )}

@@ -1,7 +1,15 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+
 import Blog from './Blog';
+
+// Add fake redux store creator
+// https://github.com/vercel/next.js/issues/8145
+const mockStore = configureStore();
+let store;
 
 test('renders blog author and title and not url or likes', () => {
   const blog = {
@@ -9,7 +17,13 @@ test('renders blog author and title and not url or likes', () => {
     author: 'Sample Author',
   };
 
-  const component = render(<Blog blog={blog} />);
+  store = mockStore(blog);
+
+  const component = render(
+    <Provider store={store}>
+      <Blog blog={blog} />
+    </Provider>
+  );
 
   // visible elements
   expect(component.container).toHaveTextContent(
@@ -32,7 +46,13 @@ test('hide and show details when button is clicked', () => {
     likes: 4,
   };
 
-  const component = render(<Blog blog={blog} />);
+  store = mockStore(blog);
+
+  const component = render(
+    <Provider store={store}>
+      <Blog blog={blog} />
+    </Provider>
+  );
   const detailsButton = component.container.querySelector('.details-button');
   fireEvent.click(detailsButton);
 
@@ -51,8 +71,13 @@ test('clicking like button twice calls event handler twice', () => {
   };
 
   const mockHandler = jest.fn();
+  store = mockStore(blog);
 
-  const component = render(<Blog blog={blog} likeBlog={mockHandler} />);
+  const component = render(
+    <Provider store={store}>
+      <Blog blog={blog} likeBlog={mockHandler} />
+    </Provider>
+  );
 
   const likeButton = component.container.querySelector('.like-button');
   fireEvent.click(likeButton);
@@ -60,5 +85,3 @@ test('clicking like button twice calls event handler twice', () => {
 
   expect(mockHandler.mock.calls).toHaveLength(2);
 });
-
-

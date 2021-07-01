@@ -7,9 +7,9 @@ const setToken = (newToken) => {
   token = `bearer ${newToken}`;
 };
 
-const getAll = () => {
-  const request = axios.get(baseUrl);
-  return request.then((response) => response.data);
+const getAll = async () => {
+  const response = await axios.get(baseUrl);
+  return response.data;
 };
 
 const create = async (newObject) => {
@@ -21,18 +21,18 @@ const create = async (newObject) => {
   return response.data;
 };
 
-const update = (id, newObject) => {
-  const request = axios.put(`${baseUrl}/${id}`, newObject);
-  return request.then((response) => response.data);
+const update = async (newObject) => {
+  const response = await axios.put(`${baseUrl}/${newObject.id}`, newObject);
+  return response.data;
 };
 
-const del = (id) => {
+const del = async (id) => {
   const config = {
     headers: { Authorization: token },
   };
 
-  const request = axios.delete(`${baseUrl}/${id}`, config);
-  return request.then((response) => response);
+  const response = await axios.delete(`${baseUrl}/${id}`, config);
+  return response;
 };
 
 const exportedMethods = { getAll, setToken, create, update, del };
