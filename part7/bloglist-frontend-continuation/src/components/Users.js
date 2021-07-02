@@ -1,28 +1,12 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { logout } from '../reducers/loggedUserReducer';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 function Users() {
-  const user = useSelector((state) => state.loggedUser);
   const users = useSelector((state) => state.users);
-
-  const dispatch = useDispatch;
-
-  const logOut = () => {
-    dispatch(logout());
-    history.push('/');
-    window.localStorage.removeItem('loggedBlogAppUser');
-  };
 
   return (
     <>
-      <div>
-        <h2>blogs</h2>
-        <p>{user.name} logged in</p>
-        <button onClick={logOut}>logout</button>
-      </div>
-
       <div>
         <h2>Users</h2>
       </div>
@@ -37,7 +21,9 @@ function Users() {
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
-              <td>{user.name}</td>
+              <td>
+                <Link to={`/users/${user.id}`}>{user.name}</Link>{' '}
+              </td>
               <td>{user.blogs.length}</td>
             </tr>
           ))}

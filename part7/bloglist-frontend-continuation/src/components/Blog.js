@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { del } from '../reducers/blogReducer';
 
@@ -33,15 +34,17 @@ const Blog = ({ blog, likeBlog }) => {
   return (
     <div style={blogStyle} data-cy="blog-container">
       <p>
-        <span>{blog.title} </span>by
-        <span> {blog.author} </span>
+        <Link to={`/blogs/${blog.id}`} style={{ marginRight: '5px' }}>
+          <span>{blog.title} </span>by
+          <span> {blog.author} </span>
+        </Link>
         <button
           type="button"
           className="details-button"
           data-cy="details-button"
           onClick={() => setAreDetailsOpen(!areDetailsOpen)}
         >
-          {areDetailsOpen ? 'hide' : 'view'}
+          {areDetailsOpen ? 'hide details' : 'view details'}
         </button>
       </p>
 
