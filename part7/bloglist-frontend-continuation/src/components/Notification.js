@@ -5,7 +5,15 @@ const Notification = ({ message, type }) => {
     return null;
   }
 
-  return <div className={`notification ${type}`}>{message}</div>;
+  return (
+    <div
+      className={`text-white text-lg p-4 ${
+        type === 'error' ? 'bg-red-700' : 'bg-green-700'
+      }`}
+    >
+      {message}
+    </div>
+  );
 };
 
 export default Notification;

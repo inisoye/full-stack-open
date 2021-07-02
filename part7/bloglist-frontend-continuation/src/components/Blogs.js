@@ -36,7 +36,7 @@ function Blogs() {
   };
 
   return (
-    <div>
+    <div className="space-y-4">
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <CreateBlogForm createBlog={addBlog} />
       </Togglable>

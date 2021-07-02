@@ -9,14 +9,6 @@ const Blog = ({ blog, likeBlog }) => {
 
   const dispatch = useDispatch();
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  };
-
   const detailsStyle = {
     display: areDetailsOpen ? 'block' : 'none',
   };
@@ -32,7 +24,10 @@ const Blog = ({ blog, likeBlog }) => {
   };
 
   return (
-    <div style={blogStyle} data-cy="blog-container">
+    <div
+      className="rounded-lg p-3 border-2 border-green-400 border-opacity-40 max-w-max space-y-2"
+      data-cy="blog-container"
+    >
       <p>
         <Link to={`/blogs/${blog.id}`} style={{ marginRight: '5px' }}>
           <span>{blog.title} </span>by
@@ -40,7 +35,7 @@ const Blog = ({ blog, likeBlog }) => {
         </Link>
         <button
           type="button"
-          className="details-button"
+          className="details-button ml-2"
           data-cy="details-button"
           onClick={() => setAreDetailsOpen(!areDetailsOpen)}
         >
@@ -48,7 +43,7 @@ const Blog = ({ blog, likeBlog }) => {
         </button>
       </p>
 
-      <div style={detailsStyle}>
+      <div style={detailsStyle} className="space-y-2">
         <p className="url">{blog.url}</p>
 
         <p className="likes">

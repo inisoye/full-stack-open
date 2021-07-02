@@ -32,6 +32,7 @@ function CreateBlogForm({ createBlog }) {
     setNewAuthor('');
     setNewUrl('');
   };
+
   return (
     <form onSubmit={addBlog}>
       <h2>create new</h2>
@@ -39,6 +40,7 @@ function CreateBlogForm({ createBlog }) {
       <label>
         title:
         <input
+          className="mt-4 ml-2"
           type="text"
           name="title"
           id="title"
@@ -52,6 +54,7 @@ function CreateBlogForm({ createBlog }) {
       <label>
         author:
         <input
+          className="mt-4 ml-2"
           type="text"
           name="author"
           id="author"
@@ -65,6 +68,7 @@ function CreateBlogForm({ createBlog }) {
       <label>
         url:
         <input
+          className="mt-4 ml-2"
           type="text"
           name="url"
           id="url"
@@ -75,7 +79,7 @@ function CreateBlogForm({ createBlog }) {
 
       <br />
 
-      <button type="submit" id="create-blog-button">
+      <button className="my-4" type="submit" id="create-blog-button">
         create
       </button>
     </form>

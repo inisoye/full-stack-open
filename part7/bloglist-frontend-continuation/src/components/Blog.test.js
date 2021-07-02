@@ -3,6 +3,8 @@ import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
+// https://stackoverflow.com/a/63513874/15063835
+import { MemoryRouter } from 'react-router-dom';
 
 import Blog from './Blog';
 
@@ -21,7 +23,9 @@ test('renders blog author and title and not url or likes', () => {
 
   const component = render(
     <Provider store={store}>
-      <Blog blog={blog} />
+      <MemoryRouter>
+        <Blog blog={blog} />
+      </MemoryRouter>
     </Provider>
   );
 
@@ -50,7 +54,9 @@ test('hide and show details when button is clicked', () => {
 
   const component = render(
     <Provider store={store}>
-      <Blog blog={blog} />
+      <MemoryRouter>
+        <Blog blog={blog} />
+      </MemoryRouter>
     </Provider>
   );
   const detailsButton = component.container.querySelector('.details-button');
@@ -75,7 +81,9 @@ test('clicking like button twice calls event handler twice', () => {
 
   const component = render(
     <Provider store={store}>
-      <Blog blog={blog} likeBlog={mockHandler} />
+      <MemoryRouter>
+        <Blog blog={blog} likeBlog={mockHandler} />
+      </MemoryRouter>
     </Provider>
   );
 

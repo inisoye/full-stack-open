@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Switch, Route, Redirect, Link } from 'react-router-dom';
+import { Switch, Route, Redirect, Link, useHistory } from 'react-router-dom';
 
 import Blogs from './components/Blogs';
 import Users from './components/Users';
@@ -18,6 +18,8 @@ import { logout } from './reducers/loggedUserReducer';
 const App = () => {
   const notification = useSelector((state) => state.notification);
   const user = useSelector((state) => state.loggedUser);
+
+  const history = useHistory();
 
   const dispatch = useDispatch();
 
@@ -48,10 +50,10 @@ const App = () => {
         type={notification?.messageType}
       />
 
-      <div style={{ display: 'flex' }}>
-        <nav style={{ marginRight: '5px' }}>
-          <ul style={{ display: 'flex', listStyle: 'none', paddingLeft: '0' }}>
-            <li style={{ marginRight: '5px' }}>
+      <header className="flex py-4 items-center	">
+        <nav className="mr-3 ">
+          <ul className="flex pl-3">
+            <li className="mr-3">
               <Link to="/blogs">blogs</Link>
             </li>
             <li>
@@ -61,32 +63,41 @@ const App = () => {
         </nav>
 
         <p>
-          <span style={{ marginRight: '5px' }}>{user.name} logged in</span>
-          <button onClick={logOut}>logout</button>
+          <span className="mr-3">{user?.name} logged in</span>
+          <button
+            className="px-3 rounded-md bg-green-200 hover:bg-green-300"
+            onClick={logOut}
+          >
+            logout
+          </button>
         </p>
+      </header>
+
+      <h1 className="text-3xl font-bold py-6  ml-6">blog app</h1>
+
+      <div className="px-6">
+        <Switch>
+          <Route path="/users/:id">
+            <User />
+          </Route>
+
+          <Route path="/blogs/:id">
+            <SingleBlogPage />
+          </Route>
+
+          <Route path="/users">
+            <Users />
+          </Route>
+
+          <Route path="/blogs">
+            <Blogs />
+          </Route>
+
+          <Route path="/">
+            {user ? <Redirect to="/blogs" /> : <LoginForm />}
+          </Route>
+        </Switch>
       </div>
-
-      <Switch>
-        <Route path="/users/:id">
-          <User />
-        </Route>
-
-        <Route path="/blogs/:id">
-          <SingleBlogPage />
-        </Route>
-
-        <Route path="/users">
-          <Users />
-        </Route>
-
-        <Route path="/blogs">
-          <Blogs />
-        </Route>
-
-        <Route path="/">
-          {user ? <Redirect to="/blogs" /> : <LoginForm />}
-        </Route>
-      </Switch>
     </>
   );
 };

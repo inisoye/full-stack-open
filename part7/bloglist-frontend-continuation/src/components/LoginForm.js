@@ -25,12 +25,13 @@ function LoginForm() {
   };
 
   return (
-    <>
+    <div className="space-y-4">
       <h2>log in to application</h2>
-      <form onSubmit={handleLogin}>
+      <form className="space-y-4" onSubmit={handleLogin}>
         <div>
           username
           <input
+            className="mt-4 ml-2"
             type="text"
             value={username}
             id="username"
@@ -41,6 +42,7 @@ function LoginForm() {
         <div>
           password
           <input
+            className="mt-4 ml-2"
             type="password"
             value={password}
             id="password"
@@ -52,7 +54,7 @@ function LoginForm() {
           login
         </button>
       </form>
-    </>
+    </div>
   );
 }
 
