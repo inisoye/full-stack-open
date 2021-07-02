@@ -17,7 +17,7 @@ const initializeUsers = () => {
     const users = await userService.getAll();
 
     dispatch({
-      type: 'INIT_BLOGS',
+      type: 'INIT_USERS',
       data: users,
     });
   };

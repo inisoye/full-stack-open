@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 
 import { login } from '../reducers/loggedUserReducer';
@@ -26,36 +25,35 @@ function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          id="username"
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          id="password"
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit" id="login-button">
-        login
-      </button>
-    </form>
+    <>
+      <h2>log in to application</h2>
+      <form onSubmit={handleLogin}>
+        <div>
+          username
+          <input
+            type="text"
+            value={username}
+            id="username"
+            name="Username"
+            onChange={({ target }) => setUsername(target.value)}
+          />
+        </div>
+        <div>
+          password
+          <input
+            type="password"
+            value={password}
+            id="password"
+            name="Password"
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </div>
+        <button type="submit" id="login-button">
+          login
+        </button>
+      </form>
+    </>
   );
 }
-
-LoginForm.propTypes = {
-  setUser: PropTypes.func.isRequired,
-};
 
 export default LoginForm;

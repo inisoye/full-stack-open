@@ -5,7 +5,7 @@ const initialState =
 
 // Reducer
 
-const userReducer = (state = initialState, action) => {
+const loggedUserReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'LOG_IN':
       return action.data;
@@ -42,4 +42,4 @@ const logout = () => {
   };
 };
 
-export { userReducer, login, logout };
+export { loggedUserReducer, login, logout };

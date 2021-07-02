@@ -1,27 +1,26 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
-import Blog from './components/Blog';
-import CreateBlogForm from './components/CreateBlogForm';
+import Blogs from './components/Blogs';
+import Users from './components/Users';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
-import Togglable from './components/Togglable';
+
 import blogService from './services/blogs';
 
-import { logout } from './reducers/loggedUserReducer';
-import { like, createBlog, initializeBlogs } from './reducers/blogReducer';
+import { initializeBlogs } from './reducers/blogReducer';
+import { initializeUsers } from './reducers/userReducer';
 
 const App = () => {
   const notification = useSelector((state) => state.notification);
-  const blogs = useSelector((state) => state.blogs);
   const user = useSelector((state) => state.loggedUser);
 
   const dispatch = useDispatch();
 
-  const blogFormRef = useRef();
-
   useEffect(() => {
     dispatch(initializeBlogs());
+    dispatch(initializeUsers());
   }, []);
 
   useEffect(() => {
@@ -33,33 +32,6 @@ const App = () => {
     }
   }, []);
 
-  const logOut = () => {
-    dispatch(logout());
-
-    window.localStorage.removeItem('loggedBlogAppUser');
-  };
-
-  const toggleBlogFormVisibility = () => {
-    blogFormRef.current.toggleVisibility();
-  };
-
-  const orderLikesDescending = (a, b) => {
-    return a.likes > b.likes ? -1 : b.likes > a.likes ? 1 : 0;
-  };
-
-  const likeBlog = (id) => {
-    const blogToChange = blogs.find((blog) => blog.id === id);
-
-    dispatch(like(blogToChange));
-  };
-
-  const addBlog = async (newBlog) => {
-    await dispatch(createBlog(newBlog));
-
-    // Close form only when addition is successful
-    toggleBlogFormVisibility();
-  };
-
   return (
     <>
       <Notification
@@ -67,32 +39,19 @@ const App = () => {
         type={notification?.messageType}
       />
 
-      {user === null ? (
-        <div>
-          <h2>log in to application</h2>
-          <LoginForm />
-        </div>
-      ) : (
-        <div>
-          <h2>blogs</h2>
+      <Switch>
+        <Route path="/users">
+          <Users />
+        </Route>
 
-          <p>
-            {user.name} logged in <button onClick={logOut}>log out</button>
-          </p>
+        <Route path="/blogs">
+          <Blogs />
+        </Route>
 
-          <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-            <CreateBlogForm
-              blogs={blogs}
-              toggleBlogFormVisibility={toggleBlogFormVisibility}
-              createBlog={addBlog}
-            />
-          </Togglable>
-
-          {blogs?.sort(orderLikesDescending).map((blog) => (
-            <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
-          ))}
-        </div>
-      )}
+        <Route path="/">
+          {user ? <Redirect to="/blogs" /> : <LoginForm />}
+        </Route>
+      </Switch>
     </>
   );
 };
