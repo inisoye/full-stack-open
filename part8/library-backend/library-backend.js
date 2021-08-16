@@ -83,13 +83,12 @@ const resolvers = {
   },
 
   Author: {
-    bookCount: (root) => {
-      // const books = await Book.find({}).populate('author');
+    bookCount: async (root) => {
+      const books = await Book.find({}).populate('author');
       // Get array of author names from books
       const listOfAuthors = books.map((book) => book.author);
-      console.log(listOfAuthors);
       // Count number of times each (author) name occurs in above arrray
-      return listOfAuthors.filter((a) => a === root.name).length;
+      return listOfAuthors.filter((a) => a.name === root.name).length;
     },
   },
 
