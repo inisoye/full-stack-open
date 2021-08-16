@@ -144,17 +144,17 @@ const resolvers = {
 
     authorCount: () => Author.collection.countDocuments(),
 
-    allBooks: (root, args) => {
-      if (!args.author) return Book.find({});
+    allBooks: async (root, args) => {
+      const books = await Book.find({}).populate('author');
 
-      // Optional genre parameter
-      if (args.genre) {
-        return books.filter(
-          (b) => b.author === args.author && b.genres.includes(args.genre)
-        );
-      }
+      const filterAuthor = (b) => b.author.name === args.author;
+      const filterGenre = (b) => b.genres.includes(args.genre);
 
-      return Book.findOne({ author: args.author });
+      if (!args.author && !args.genre) return books;
+      if (args.author && !args.genre) return books.filter(filterAuthor);
+      if (!args.author && args.genre) return books.filter(filterGenre);
+      if (args.author && args.genre)
+        return books.filter(filterAuthor).filter(filterGenre);
     },
 
     allAuthors: () => Author.find({}),
@@ -162,8 +162,10 @@ const resolvers = {
 
   Author: {
     bookCount: (root) => {
+      // const books = await Book.find({}).populate('author');
       // Get array of author names from books
       const listOfAuthors = books.map((book) => book.author);
+      console.log(listOfAuthors);
       // Count number of times each (author) name occurs in above arrray
       return listOfAuthors.filter((a) => a === root.name).length;
     },
@@ -174,13 +176,9 @@ const resolvers = {
       const savedAuthor = await Book.findOne({ name: args.author });
       const authorIsSavedAlready = Boolean(savedAuthor);
 
-      console.log(savedAuthor);
-
       if (!authorIsSavedAlready) {
         const newAuthor = new Author({ name: args.author });
         const newBook = new Book({ ...args, author: newAuthor });
-
-        console.log('not saved');
 
         try {
           await newAuthor.save();
@@ -196,8 +194,6 @@ const resolvers = {
 
       if (authorIsSavedAlready) {
         const newBook = new Book({ ...args, author: savedAuthor });
-
-        console.log('saved');
 
         try {
           await newBook.save();
