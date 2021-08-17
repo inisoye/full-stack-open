@@ -41,11 +41,22 @@ const typeDefs = gql`
     id: ID!
   }
 
+  type User {
+    username: String!
+    favoriteGenre: String!
+    id: ID!
+  }
+
+  type Token {
+    value: String!
+  }
+
   type Query {
     bookCount: Int!
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
+    me: User
   }
 
   type Mutation {
@@ -57,6 +68,10 @@ const typeDefs = gql`
     ): Book
 
     editAuthor(name: String!, setBornTo: Int!): Author
+
+    createUser(username: String!, favoriteGenre: String!): User
+
+    login(username: String!, password: String!): Token
   }
 `;
 
@@ -80,6 +95,8 @@ const resolvers = {
     },
 
     allAuthors: () => Author.find({}),
+
+    me: (root, args, context) => context.currentUser,
   },
 
   Author: {
@@ -93,9 +110,11 @@ const resolvers = {
   },
 
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, { currentUser }) => {
       const savedAuthor = await Book.findOne({ name: args.author });
       const authorIsSavedAlready = Boolean(savedAuthor);
+
+      if (!currentUser) throw new AuthenticationError('not authenticated');
 
       if (!authorIsSavedAlready) {
         const newAuthor = new Author({ name: args.author });
@@ -128,8 +147,10 @@ const resolvers = {
       }
     },
 
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, { currentUser }) => {
       const authorToEdit = await Author.findOne({ name: args.name });
+
+      if (!currentUser) throw new AuthenticationError('not authenticated');
 
       if (!authorToEdit) return null;
 
@@ -146,12 +167,49 @@ const resolvers = {
 
       return authorToEdit;
     },
+
+    createUser: async (root, args) => {
+      const user = new User({ ...args });
+
+      try {
+        return user.save();
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        });
+      }
+    },
+
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username });
+
+      if (!user || args.password !== 'secret') {
+        throw new UserInputError('wrong credentials');
+      }
+
+      const userForToken = {
+        username: user.username,
+        id: user._id,
+      };
+
+      return { value: jwt.sign(userForToken, JWT_SECRET) };
+    },
   },
 };
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: async ({ req }) => {
+    const auth = req ? req.headers.authorization : null;
+    if (auth && auth.toLowerCase().startsWith('bearer ')) {
+      const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
+      const currentUser = await User.findById(decodedToken.id).populate(
+        'friends'
+      );
+      return { currentUser };
+    }
+  },
 });
 
 server.listen().then(({ url }) => {
