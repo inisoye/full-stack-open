@@ -7,8 +7,6 @@ const Authors = (props) => {
   const [name, setName] = useState('');
   const [born, setBorn] = useState('');
 
-  console.log(Number(born));
-
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }],
   });
@@ -49,7 +47,7 @@ const Authors = (props) => {
       </table>
 
       <form onSubmit={submit}>
-        <h2>Set birthyear</h2>
+        <h2>set birthyear</h2>
 
         <div>
           name

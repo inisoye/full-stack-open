@@ -2,15 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { LOGIN } from '../queries';
 
-const LoginForm = ({ setError, setToken }) => {
+const LoginForm = ({ setToken, setPage, show }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const [login, result] = useMutation(LOGIN, {
-    onError: (error) => {
-      setError(error.graphQLErrors[0].message);
-    },
-  });
+  const [login, result] = useMutation(LOGIN, {});
 
   useEffect(() => {
     if (result.data) {
@@ -23,11 +19,21 @@ const LoginForm = ({ setError, setToken }) => {
   const submit = async (event) => {
     event.preventDefault();
 
-    login({ variables: { username, password } });
+    await login({ variables: { username, password } });
+
+    // Refresh page to enable token from local storage to enter application
+    // Line 15 index.js
+    window.location.reload();
   };
+
+  if (!show) {
+    return null;
+  }
 
   return (
     <div>
+      <h2>login</h2>
+
       <form onSubmit={submit}>
         <div>
           username{' '}
