@@ -12,7 +12,7 @@ const LoginForm = ({ setToken, setPage, show }) => {
     if (result.data) {
       const token = result.data.login.value;
       setToken(token);
-      localStorage.setItem('phonenumbers-user-token', token);
+      localStorage.setItem('library-user-token', token);
     }
   }, [result.data]); // eslint-disable-line
 
@@ -21,9 +21,7 @@ const LoginForm = ({ setToken, setPage, show }) => {
 
     await login({ variables: { username, password } });
 
-    // Refresh page to enable token from local storage to enter application
-    // Line 15 index.js
-    window.location.reload();
+    setPage('authors');
   };
 
   if (!show) {

@@ -1,17 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-const Recommendations = (props) => {
-  if (!props.show) {
+const Recommendations = ({ show, currentUser, books, getFilteredBooks }) => {
+  const favoriteGenre = currentUser?.me?.favoriteGenre;
+
+  useEffect(() => {
+    show && getFilteredBooks({ variables: { genreToSearch: favoriteGenre } });
+  }, [getFilteredBooks, show, favoriteGenre]);
+
+  if (!show) {
     return null;
   }
-
-  const { favoriteGenre } = props.currentUser.me;
-
-  const books = props.books;
-
-  const filteredBooks = books?.filter((book) => {
-    return book.genres.includes(favoriteGenre);
-  });
 
   return (
     <div>
@@ -28,7 +26,7 @@ const Recommendations = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {filteredBooks?.map((a) => (
+          {books?.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>

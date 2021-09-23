@@ -1,18 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const Books = (props) => {
+const Books = ({
+  show,
+  books: allBooks,
+  getAllBooks,
+  getFilteredBooks,
+  filteredBooks,
+}) => {
   const [selectedGenre, setSelectedGenre] = useState('');
+  const [books, setBooks] = useState([]);
 
-  if (!props.show) {
+  useEffect(() => {
+    getAllBooks();
+
+    if (!selectedGenre) {
+      setBooks(allBooks);
+      return;
+    }
+
+    show && getFilteredBooks({ variables: { genreToSearch: selectedGenre } });
+    setBooks(filteredBooks);
+  }, [
+    getFilteredBooks,
+    getAllBooks,
+    show,
+    allBooks,
+    filteredBooks,
+    selectedGenre,
+  ]);
+
+  if (!show) {
     return null;
   }
 
-  const books = props.books;
-  const filteredBooks = books.filter((book) => {
-    if (!selectedGenre) return true;
-    return book.genres.includes(selectedGenre);
-  });
-  const allGenres = books.map((book) => book.genres).flat();
+  const allGenres = allBooks?.map((book) => book.genres).flat();
   const allGenresWithoutDuplicates = [...new Set(allGenres)];
 
   return (
@@ -32,7 +53,7 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {filteredBooks?.map((a) => (
+          {books?.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
@@ -48,7 +69,13 @@ const Books = (props) => {
             {genre}
           </button>
         ))}
-        <button onClick={() => setSelectedGenre('')}>all genres</button>
+        <button
+          onClick={() => {
+            setSelectedGenre('');
+          }}
+        >
+          all genres
+        </button>
       </div>
     </div>
   );
