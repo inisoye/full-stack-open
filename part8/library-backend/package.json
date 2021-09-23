@@ -4,7 +4,8 @@
   "description": "",
   "main": "library-backend.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon library-backend.js"
   },
   "keywords": [],
   "author": "",
@@ -17,5 +18,8 @@
     "mongoose": "^5.13.7",
     "mongoose-unique-validator": "^2.0.3",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }
