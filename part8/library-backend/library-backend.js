@@ -124,9 +124,7 @@ const resolvers = {
 
   Mutation: {
     addBook: async (root, args, { currentUser }) => {
-      console.log(args);
-
-      const savedAuthor = await Book.findOne({ name: args.author });
+      const savedAuthor = await Author.findOne({ name: args.author });
       const authorIsSavedAlready = Boolean(savedAuthor);
 
       if (!currentUser) throw new AuthenticationError('not authenticated');
