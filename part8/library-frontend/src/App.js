@@ -19,9 +19,9 @@ import {
 } from './queries';
 
 const App = () => {
-  const savedToken = window.localStorage.getItem('library-user-token');
+  const getSavedToken = () => window.localStorage.getItem('library-user-token');
 
-  const [token, setToken] = useState(savedToken);
+  const [token, setToken] = useState(getSavedToken);
   const [page, setPage] = useState('authors');
   const authorsResult = useQuery(ALL_AUTHORS);
   const [getAllBooks, allBooksResult] = useLazyQuery(ALL_BOOKS);
