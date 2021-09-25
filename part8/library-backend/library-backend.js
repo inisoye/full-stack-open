@@ -34,6 +34,8 @@ mongoose
     console.log('error connection to MongoDB:', error.message);
   });
 
+// mongoose.set('debug', true);
+
 const typeDefs = gql`
   type Author {
     name: String!
@@ -107,19 +109,25 @@ const resolvers = {
         return books.filter(filterAuthor).filter(filterGenre);
     },
 
-    allAuthors: () => Author.find({}),
+    allAuthors: async (root) => {
+      const authors = await Author.find({});
+      const books = await Book.find({}).populate('author');
+
+      return authors.map((author) => {
+        const bookCount = books
+          .map((b) => b.author)
+          .filter((a) => a.name === author.name).length;
+
+        return {
+          name: author.name,
+          born: author.born,
+          bookCount,
+          id: author._id,
+        };
+      });
+    },
 
     me: (root, args, context) => context.currentUser,
-  },
-
-  Author: {
-    bookCount: async (root) => {
-      const books = await Book.find({}).populate('author');
-      // Get array of author names from books
-      const listOfAuthors = books.map((book) => book.author);
-      // Count number of times each (author) name occurs in above arrray
-      return listOfAuthors.filter((a) => a.name === root.name).length;
-    },
   },
 
   Mutation: {
