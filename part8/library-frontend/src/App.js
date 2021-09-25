@@ -30,9 +30,25 @@ const App = () => {
   const currentUser = useQuery(GET_ME);
   const client = useApolloClient();
 
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) =>
+      set.map((p) => p.id).includes(object.id);
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS });
+
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks: dataInStore.allBooks.concat(addedBook) },
+      });
+    }
+  };
+
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
-      window.alert(`${subscriptionData.data.bookAdded.title} has been added`);
+      const addedBook = subscriptionData.data.bookAdded;
+      window.alert(`${addedBook.title} has been added`);
+      updateCacheWith(addedBook);
     },
   });
 
@@ -48,12 +64,14 @@ const App = () => {
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
-        {!!token && <button onClick={() => setPage('add')}>add book</button>}
         {!!token && (
-          <button onClick={() => setPage('recommend')}>recommend</button>
+          <>
+            <button onClick={() => setPage('add')}>add book</button>
+            <button onClick={() => setPage('recommend')}>recommend</button>
+            <button onClick={logout}>logout</button>
+          </>
         )}
         {!token && <button onClick={() => setPage('login')}>login</button>}
-        {!!token && <button onClick={logout}>logout</button>}
       </div>
 
       <Authors
@@ -76,7 +94,7 @@ const App = () => {
         getFilteredBooks={getFilteredBooks}
       />
 
-      <NewBook show={page === 'add'} getFilteredBooks={getFilteredBooks} />
+      <NewBook show={page === 'add'} updateCacheWith={updateCacheWith} />
 
       <LoginForm
         show={page === 'login'}

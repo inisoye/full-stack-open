@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/client';
 
 import { ADD_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries';
 
-const NewBook = (props) => {
+const NewBook = ({ show, updateCacheWith }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [published, setPublished] = useState('');
@@ -12,9 +12,12 @@ const NewBook = (props) => {
 
   const [addBook] = useMutation(ADD_BOOK, {
     refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+    update: (store, response) => {
+      updateCacheWith(response.data.addBook);
+    },
   });
 
-  if (!props.show) {
+  if (!show) {
     return null;
   }
 
