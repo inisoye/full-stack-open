@@ -65,7 +65,13 @@ const Books = ({
 
       <div>
         {allGenresWithoutDuplicates.map((genre) => (
-          <button key={genre} onClick={() => setSelectedGenre(genre)}>
+          <button
+            key={genre}
+            onClick={() => {
+              setSelectedGenre(genre);
+              getFilteredBooks({ variables: { genreToSearch: selectedGenre } });
+            }}
+          >
             {genre}
           </button>
         ))}

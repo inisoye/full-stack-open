@@ -1,14 +1,26 @@
 import React, { useState } from 'react';
-import { useQuery, useLazyQuery, useApolloClient } from '@apollo/client';
+import {
+  useQuery,
+  useLazyQuery,
+  useSubscription,
+  useApolloClient,
+} from '@apollo/client';
 import LoginForm from './components/LoginForm';
 import Authors from './components/Authors';
 import Books from './components/Books';
 import Recommendations from './components/Recommendations';
 import NewBook from './components/NewBook';
-import { ALL_AUTHORS, ALL_BOOKS, GET_ME, ALL_BOOKS_BY_GENRE } from './queries';
+import {
+  ALL_AUTHORS,
+  ALL_BOOKS,
+  GET_ME,
+  ALL_BOOKS_BY_GENRE,
+  BOOK_ADDED,
+} from './queries';
 
 const App = () => {
   const savedToken = window.localStorage.getItem('library-user-token');
+
   const [token, setToken] = useState(savedToken);
   const [page, setPage] = useState('authors');
   const authorsResult = useQuery(ALL_AUTHORS);
@@ -17,6 +29,12 @@ const App = () => {
     useLazyQuery(ALL_BOOKS_BY_GENRE);
   const currentUser = useQuery(GET_ME);
   const client = useApolloClient();
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      window.alert(`${subscriptionData.data.bookAdded.title} has been added`);
+    },
+  });
 
   const logout = () => {
     setPage('login');
