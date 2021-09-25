@@ -4,7 +4,6 @@ const {
   AuthenticationError,
   gql,
 } = require('apollo-server');
-const { v1: uuid } = require('uuid');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const { PubSub } = require('graphql-subscriptions');
