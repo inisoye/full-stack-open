@@ -40,5 +40,5 @@ try {
   const bmi = calculateBmi(height, weight);
   console.log(bmi);
 } catch (e) {
-  console.log('Error, something bad happened, message: ', e);
+  // console.log('Error, something bad happened, message: ', e);
 }
