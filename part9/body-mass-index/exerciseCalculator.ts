@@ -44,7 +44,7 @@ const calculateExercises = (
     return Math.round(rating);
   };
 
-  const determineRatingDescription = (rating: number) => {
+  const determineRatingDescription = (rating: number): string => {
     if (rating === 1) {
       return 'Not good enough, you can do much better';
     } else if (rating === 2) {
@@ -52,6 +52,8 @@ const calculateExercises = (
     } else if (rating === 3) {
       return 'Good job';
     }
+
+    throw new Error('Could not calculate rating!');
   };
 
   const rating = calculateRating();
