@@ -1,6 +1,13 @@
+// @types/uuid and uuid versions must match :https://github.com/DefinitelyTyped/DefinitelyTyped/issues/42634#issuecomment-677426309
+import { v4 as uuidv4 } from 'uuid';
+
 import patients from '../../data/patients';
 
-import { PatientEntry, NonSensitivePatientEntry } from '../types';
+import {
+  PatientEntry,
+  NonSensitivePatientEntry,
+  NewPatientEntry,
+} from '../types';
 
 const getEntries = (): PatientEntry[] => {
   return patients;
@@ -16,4 +23,16 @@ const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
   }));
 };
 
-export default { getEntries, getNonSensitiveEntries };
+const addPatient = (newEntry: NewPatientEntry): PatientEntry => {
+  const id: string = uuidv4();
+
+  const newPatientEntry = {
+    id,
+    ...newEntry,
+  };
+
+  patients.push(newPatientEntry);
+  return newPatientEntry;
+};
+
+export default { getEntries, getNonSensitiveEntries, addPatient };

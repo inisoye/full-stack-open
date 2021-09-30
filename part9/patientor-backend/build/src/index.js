@@ -8,7 +8,7 @@ var cors_1 = __importDefault(require("cors"));
 var diagnoses_1 = __importDefault(require("./routes/diagnoses"));
 var patients_1 = __importDefault(require("./routes/patients"));
 var app = (0, express_1.default)();
-var allowedOrigins = ['http://localhost:3002'];
+var allowedOrigins = ['http://localhost:3000', 'http://localhost:3002'];
 var options = {
     origin: allowedOrigins,
 };
