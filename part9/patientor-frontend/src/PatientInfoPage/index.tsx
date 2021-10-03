@@ -5,12 +5,17 @@ import { Container, Header, Icon } from 'semantic-ui-react';
 
 import { apiBaseUrl } from '../constants';
 import { useStateValue } from '../state';
-import { Patient } from '../types';
+import { Patient, EntryType } from '../types';
 import { setSinglePatient } from '../state/reducer';
+import {
+  HealthCheckEntry,
+  HospitalEntry,
+  OccupationalHealthCareEntry,
+} from './Entries';
 
 const PatientInfo: React.FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
-  const [{ selectedPatient, diagnoses }, dispatch] = useStateValue();
+  const [{ selectedPatient }, dispatch] = useStateValue();
 
   React.useEffect(() => {
     const fetchPatient = async () => {
@@ -39,27 +44,23 @@ const PatientInfo: React.FunctionComponent = () => {
 
       <Header as="h3">entries</Header>
 
-      {entries?.map(({ id, date, description, diagnosisCodes }) => {
-        const relevantDiagnoses = diagnoses?.filter(({ code }) =>
-          diagnosisCodes?.includes(code)
-        );
+      {entries?.map((entry) => {
+        switch (entry.type) {
+          case EntryType.Hospital:
+            return <HospitalEntry key={entry.id} entry={entry} />;
 
-        return (
-          <div key={id}>
-            <p>
-              {date} <em>{description}</em>
-            </p>
+          case EntryType.OccupationalHealthcare:
+            return <OccupationalHealthCareEntry key={entry.id} entry={entry} />;
 
-            <ul>
-              {relevantDiagnoses?.map(({ code, name }) => (
-                <li key={code}>
-                  {code} {name}
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
+          case EntryType.HealthCheck:
+            return <HealthCheckEntry key={entry.id} entry={entry} />;
+
+          default:
+            throw new Error(`Unknown entry type: ${JSON.stringify(entry)}`);
+        }
       })}
+
+     
     </Container>
   );
 };
