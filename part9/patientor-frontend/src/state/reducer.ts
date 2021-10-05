@@ -34,6 +34,8 @@ export const addPatient = (payload: Patient): Action => {
   };
 };
 
+
+
 export const setSinglePatient = (payload: Patient): Action => {
   return {
     type: 'SET_PATIENT',

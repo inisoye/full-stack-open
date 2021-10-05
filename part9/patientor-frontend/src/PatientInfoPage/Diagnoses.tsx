@@ -5,7 +5,7 @@ import { useStateValue } from '../state';
 import { Diagnosis } from '../types';
 
 interface DiagnosesProps {
-  diagnosisCodes: Array<Diagnosis['code']>;
+  diagnosisCodes: Array<Diagnosis['code']> | undefined;
 }
 
 const Diagnoses: React.FunctionComponent<DiagnosesProps> = ({
