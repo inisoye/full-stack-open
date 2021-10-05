@@ -53,8 +53,7 @@ const PatientInfo: React.FunctionComponent = () => {
       dispatch(setSinglePatient(updatedPatientFromApi));
       closeModal();
     } catch (e) {
-      console.error(e.response.data);
-      setError(e.response.data.error);
+      console.error(e);
     }
   };
 
