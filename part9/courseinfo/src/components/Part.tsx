@@ -14,7 +14,7 @@ interface PartProps {
 
 const Part = ({ coursePart }: PartProps): JSX.Element => {
   switch (coursePart.type) {
-    case 'normal': {
+    case 'normal':
       return (
         <p>
           <b>
@@ -24,9 +24,8 @@ const Part = ({ coursePart }: PartProps): JSX.Element => {
           <em>{coursePart.description}</em>
         </p>
       );
-    }
 
-    case 'groupProject': {
+    case 'groupProject':
       return (
         <p>
           <b>
@@ -36,9 +35,8 @@ const Part = ({ coursePart }: PartProps): JSX.Element => {
           <span>project exercises {coursePart.groupProjectCount}</span>
         </p>
       );
-    }
 
-    case 'submission': {
+    case 'submission':
       return (
         <p>
           <b>
@@ -50,9 +48,8 @@ const Part = ({ coursePart }: PartProps): JSX.Element => {
           <span>submit to {coursePart.exerciseSubmissionLink}</span>
         </p>
       );
-    }
 
-    case 'special': {
+    case 'special':
       return (
         <p>
           <b>
@@ -72,15 +69,11 @@ const Part = ({ coursePart }: PartProps): JSX.Element => {
           </span>
         </p>
       );
-    }
 
     // Exhaustive type checking
-    default: {
-      assertNever(coursePart);
-    }
+    default:
+      return assertNever(coursePart);
   }
-
-  return <div>Stuff</div>;
 };
 
 export default Part;
