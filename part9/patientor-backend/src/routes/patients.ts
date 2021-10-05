@@ -37,7 +37,7 @@ router.post('/:id/entries', (req, res) => {
 
     const newEntry = verifyNewEntry(req.body);
 
-    if (patient && newEntry) {
+    if (!!patient && !!newEntry) {
       const addedEntry = addEntry(patient, newEntry);
       res.json(addedEntry);
     }
